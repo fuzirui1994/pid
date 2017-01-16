@@ -26,8 +26,9 @@ void pid_init(PID_t *pid, float kp, float ki, float kd)
 	pid->error_previous = 0;
 	pid->integral = 0;
 
-    pid->features = 0;
-
+    pid->feature_sat_max = 0 ;
+    pid->feature_sat_min = 0 ;
+    pid->feature_windup = 0 ;
 }
 
 // Change the reference of PID ;
@@ -54,7 +55,7 @@ float pid_calculate(PID_t *pid, float val, float dt)
 
     total = (error * pid->kp) + (i * pid->ki) + (d * pid->kd);
 
-    if ( pid.feature_windup )
+    if ( pid->feature_windup )
     {
         if ( i < 0 )
             i = ( i < -pid->intmax ? -pid->intmax : i );
