@@ -3,6 +3,8 @@
  *
  *  Created on: Sep 11, 2009
  *      Author: pixhawk
+ *  Revised on: Jan 16, 2016
+ *      Author: Donghao
  */
 
 #ifndef PID_H_
@@ -17,36 +19,30 @@ typedef struct {
 		float ki;
 		float kd;
 
-		float sp;
+		float sp; // Set poin of PID: the reference
 		float integral;
 		float error_previous;
 
-        unsigned int features;
+        unsigned int feature_windup ;
+        unsigned int feature_sat_max ;
+        unsigned int feature_sat_min ;
+
 		float intmax;
         float sat_max;
         float sat_min;
 } PID_t;
 
-typedef enum {
-    PID_ENABLE_WINDUP   =   (1<<0),
-    PID_DEBUG           =   (1<<1),
-    PID_OUTPUT_SAT_MIN  =   (1<<2),
-    PID_OUTPUT_SAT_MAX  =   (1<<3),
-    PID_INPUT_HIST      =   (1<<4)
-} PIDFeatures_t;
+void    pid_init( PID_t          *pid, 
+                  float          kp, 
+                  float          ki, 
+                  float          kd);
 
-void    pid_init                                    (PID_t          *pid, 
-                                                     float          kp, 
-                                                     float          ki, 
-                                                     float          kd);
-void    pid_enable_feature                          (PID_t          *pid, 
-                                                     unsigned int   feature,
-                                                     float          value);
-void    pid_set                                     (PID_t          *pid,
-                                                     float          sp);
-float   pid_calculate                               (PID_t          *pid,
-                                                     float          val,
-                                                     float          dt);
+void    pid_set( PID_t          *pid,
+                 float          sp);
+
+float   pid_calculate( PID_t          *pid,
+                       float          val,
+                       float          dt);
 
 #ifdef  __cplusplus
 }
